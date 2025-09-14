@@ -31,10 +31,24 @@ class VehicleImage extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['url'];
+
+    /**
      * Get the vehicle that owns the image.
      */
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
+    }
+    /**
+     * Get the full URL for the image.
+     */
+    public function getUrlAttribute(): string
+    {
+        return asset('storage/' . $this->path);
     }
 }
