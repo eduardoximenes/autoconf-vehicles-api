@@ -50,11 +50,6 @@ trait ApiResponse
         return $this->errorResponse($message, Response::HTTP_UNAUTHORIZED);
     }
 
-    protected function validationErrorResponse($errors, string $message = 'Dados inválidos'): JsonResponse
-    {
-        return $this->errorResponse($message, Response::HTTP_UNPROCESSABLE_ENTITY, $errors);
-    }
-
     protected function paginatedResponse($data, string $message = 'Success'): JsonResponse
     {
         return response()->json([

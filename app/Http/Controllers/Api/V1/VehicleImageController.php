@@ -21,11 +21,72 @@ class VehicleImageController extends BaseController
     ) {}
 
     /**
-     * Upload multiple images for a vehicle
-     *
-     * @param UploadImagesRequest $request
-     * @param int $vehicleId
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/vehicles/{vehicleId}/images",
+     *     tags={"Imagens"},
+     *     summary="Upload múltiplo de imagens",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="vehicleId",
+     *         in="path",
+     *         required=true,
+     *         description="ID do veículo",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="files[]",
+     *                     type="array",
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Array de imagens (máx. 2MB cada)"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Imagens enviadas com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/VehicleImage")
+     *             ),
+     *             @OA\Property(property="message", type="string", example="Imagens enviadas com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Ação não autorizada",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Veículo não encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erro ao enviar imagens")
+     *         )
+     *     )
+     * )
      */
     public function store(UploadImagesRequest $request, int $vehicleId): JsonResponse
     {
@@ -50,12 +111,49 @@ class VehicleImageController extends BaseController
     }
 
     /**
-     * Set an image as cover for the vehicle
-     *
-     * @param SetCoverImageRequest $request
-     * @param int $vehicleId
-     * @param int $imageId
-     * @return JsonResponse
+     * @OA\Patch(
+     *     path="/vehicles/{vehicleId}/images/{imageId}/cover",
+     *     tags={"Imagens"},
+     *     summary="Definir imagem como capa",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="vehicleId",
+     *         in="path",
+     *         required=true,
+     *         description="ID do veículo",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="imageId",
+     *         in="path",
+     *         required=true,
+     *         description="ID da imagem",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Capa definida com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/VehicleImage"),
+     *             @OA\Property(property="message", type="string", example="Imagem de capa definida com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Ação não autorizada",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Veículo ou imagem não encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
      */
     public function setCover(Request $request, int $vehicleId, int $imageId): JsonResponse
     {
@@ -77,11 +175,48 @@ class VehicleImageController extends BaseController
     }
 
     /**
-     * Delete an image from the vehicle
-     *
-     * @param int $vehicleId
-     * @param int $imageId
-     * @return JsonResponse
+     * @OA\Delete(
+     *     path="/vehicles/{vehicleId}/images/{imageId}",
+     *     tags={"Imagens"},
+     *     summary="Excluir imagem do veículo",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="vehicleId",
+     *         in="path",
+     *         required=true,
+     *         description="ID do veículo",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="imageId",
+     *         in="path",
+     *         required=true,
+     *         description="ID da imagem",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Imagem excluída com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Imagem excluída com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedError")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Ação não autorizada",
+     *         @OA\JsonContent(ref="#/components/schemas/ForbiddenError")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Veículo ou imagem não encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     )
+     * )
      */
     public function destroy(int $vehicleId, int $imageId): JsonResponse
     {
