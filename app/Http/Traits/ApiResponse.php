@@ -62,10 +62,10 @@ trait ApiResponse
             'message' => $message,
             'data' => $data->items(),
             'pagination' => [
-                'per_page' => $data->perPage(),
-                'total' => $data->total(),
                 'current_page' => $data->currentPage(),
                 'last_page' => $data->lastPage(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
             ]
         ]);
     }
