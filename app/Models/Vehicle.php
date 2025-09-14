@@ -20,6 +20,7 @@ class Vehicle extends Model
         'license_plate',
         'chassis',
         'brand',
+        'model',
         'version',
         'sale_price',
         'color',
@@ -27,6 +28,8 @@ class Vehicle extends Model
         'transmission',
         'fuel_type',
         'user_id',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -53,5 +56,29 @@ class Vehicle extends Model
     public function images(): HasMany
     {
         return $this->hasMany(VehicleImage::class);
+    }
+
+    /**
+     * Get the cover image for the vehicle.
+     */
+    public function coverImage()
+    {
+        return $this->hasOne(VehicleImage::class)->where('is_cover', true);
+    }
+
+    /**
+     * Get the user who created the vehicle.
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get the user who last updated the vehicle.
+     */
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
