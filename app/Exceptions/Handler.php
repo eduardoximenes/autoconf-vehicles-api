@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Illuminate\Http\Response;
@@ -32,6 +33,9 @@ class Handler extends ExceptionHandler
 
             case $e instanceof AuthenticationException:
                 return $this->error([], 'Token inválido ou expirado', Response::HTTP_UNAUTHORIZED);
+
+            case $e instanceof AccessDeniedHttpException:
+                return $this->error([], 'Ação não autorizada', Response::HTTP_FORBIDDEN);
 
             case $e instanceof TooManyRequestsHttpException:
                 return $this->error([], 'Muitas tentativas. Tente novamente em alguns minutos', Response::HTTP_TOO_MANY_REQUESTS);
